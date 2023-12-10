@@ -1,0 +1,24 @@
+.btn-to {
+   min-width: 200px;
+   padding: 15px;
+   border-radius: 12px;
+   color: white;
+   background-color: var(--site-accept-color);
+   cursor: pointer;
+   transition: all 0.3s;
+   border: 1px solid var(--site-accept-color);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+.btn-to:hover {
+   color: var(--site-accept-color);
+   background-color: transparent;
+   transition: all 0.3s;
+}
+.main-content {
+   flex: 1 1 auto;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}

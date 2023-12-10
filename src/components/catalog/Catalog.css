@@ -1,0 +1,10 @@
+.catalog-list {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   padding: 30px 0;
+}
+.catalog-page__title {
+   font-size: 40px;
+   margin: 20px 0;
+}

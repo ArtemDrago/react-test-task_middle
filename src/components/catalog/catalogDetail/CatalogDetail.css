@@ -1,0 +1,113 @@
+
+.detail-product-wrapper {
+   padding: 30px 0;
+   display: flex;
+   gap: 30px;
+}
+.detail-product-images {
+   position: relative;
+   overflow: hidden;
+   width: 400px;
+   min-width: 400px;
+   height: 400px;
+   display: flex;
+   cursor: pointer;
+}
+.detail-product-content {
+   width: 100%;
+}
+.product-detail-filter {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   margin-bottom: 20px;
+}
+.detail-product-title {
+   margin-bottom: 15px;
+   font-size: 22px;
+   font-weight: 600;
+}
+.filter-block {
+   display: flex;
+   gap: 15px;
+}
+.filter-block-title {
+   font-size: 16px;
+   font-weight: 500;
+   min-width: 150px;
+}
+.colors-wrapper {
+   display: flex;
+   gap: 10px;
+}
+.color-block {
+   display: block;
+   width: 25px;
+   height: 25px;
+   border: 1px solid var(--site-accept-color);
+   box-sizing: border-box;
+   transition: all 0.3s;
+}
+.color-block.active {
+   border-width: 3px;
+}
+.color-block:hover {
+   border-width: 3px;
+   transition: all 0.3s;
+}
+input[type = 'radio'] {
+   display: none;
+}
+.size-wrapper {
+   display: flex;
+   gap: 10px;
+}
+.size-wrapper label {
+   cursor: pointer;
+}
+.size {
+   padding: 5px 10px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border: 1px solid var(--site-accept-color);
+   border-radius: 12px;
+   font-size: 12px;
+   font-weight: 600;
+   transition: all 0.3s;
+}
+.size:hover {
+   color: white;
+   background-color: teal;
+   transition: all 0.3s;
+}
+.size.disable {
+   cursor: auto;
+   opacity: 0.4;
+}
+.size.disable:hover {
+   color: black;
+   background-color: transparent;
+}
+.size.active {
+   color: white;
+   background-color: var(--site-accept-color);
+   transition: all 0.3s;
+}
+
+@media (max-width:1024px) {
+   .detail-product-images {
+      width: 200px;
+      min-width: 200px;
+      height: 200px;
+      margin: 0 auto;
+   }
+   .detail-product-wrapper {
+      flex-direction: column;
+   }
+   .colors-wrapper,
+   .size-wrapper {
+      flex-wrap: wrap;
+   }
+}
