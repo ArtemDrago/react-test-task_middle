@@ -31,11 +31,13 @@
 .filter-block {
    display: flex;
    gap: 15px;
+   margin-bottom: 10px;
 }
 .filter-block-title {
    font-size: 16px;
    font-weight: 500;
    min-width: 150px;
+   text-transform: capitalize;
 }
 .colors-wrapper {
    display: flex;
@@ -82,20 +84,47 @@ input[type = 'radio'] {
    background-color: teal;
    transition: all 0.3s;
 }
-.size.disable {
-   cursor: auto;
-   opacity: 0.4;
-}
-.size.disable:hover {
-   color: black;
-   background-color: transparent;
+.add-item-basket.disable:hover {
+   background-color: teal;
+   color: white;
 }
 .size.active {
    color: white;
    background-color: var(--site-accept-color);
    transition: all 0.3s;
 }
-
+.add-item-basket {
+   margin-top: 20px;
+   background-color: var(--site-accept-color);
+   color: white;
+   border: 1px solid var(--site-accept-color);
+   padding: 5px;
+   cursor: pointer;
+   transition: all 0.3s;
+   border-radius: 8px;
+   position: relative;
+}
+.add-item-basket:hover {
+   color: var(--site-accept-color);
+   background-color: transparent;
+   transition: all 0.3s;
+}
+.is-select-size {
+   position: absolute;
+   left: 0;
+   top: 0;
+   color: black;
+   min-width: 100%;
+   text-align: center;
+   opacity: 0;
+   z-index: -1;
+   transition: all 0.3s;
+}
+.add-item-basket.disable:hover .is-select-size{
+   transition: all 0.3s;
+   opacity: 1;
+   top: 110%;
+}
 @media (max-width:1024px) {
    .detail-product-images {
       width: 200px;
@@ -109,5 +138,8 @@ input[type = 'radio'] {
    .colors-wrapper,
    .size-wrapper {
       flex-wrap: wrap;
+   }
+   .filter-block-title {
+      min-width: auto;
    }
 }

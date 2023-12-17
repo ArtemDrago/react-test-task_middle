@@ -4,46 +4,62 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCatalogItems } from '../../store/redusers/asyncGetCatalogItems';
 import CatalogSections from './CatalogItem/CatalogItem';
 import { catalogVariableLangRu } from './lang';
-import changeImg from '../../utilits/utilit';
+import appUtilit from '../../utilits/utilit';
 
 function Catalog({ type }) {
    const dispatch = useDispatch();
-   const [products, setProducts] = useState([]);
+   const [products, setProducts] = useState(null);
    let catalogItems = [];
    let basketItems = [];
+   const [pageTitle, setPageTitle] = useState('Каталог');
 
    useEffect(() => {
       dispatch(getCatalogItems());
-      changeImg();
-
+      appUtilit.changeImg();
    }, []);
 
    catalogItems = useSelector((state) => state.catalog.catalogItems);
-
+   basketItems = useSelector((state) => state.basket.basketItems);
 
    useMemo(() => {
-      if (type == 'catalog' && catalogItems.length !== 0) {
-         setProducts(catalogItems);
+      switch (type) {
+         case 'catalog':
+            setPageTitle(catalogVariableLangRu.catalogTitle);
+            setProducts(catalogItems);
+            break;
+         case 'basket':
+            setPageTitle(catalogVariableLangRu.basketTitle);
+            setProducts(basketItems);
+            break;
+
+         default:
+            break;
       }
-   }, [catalogItems])
-
-
+   }, [catalogItems, basketItems, type]);
 
    return (
       <div className="catalog-page__wrapper">
          <h4 className='catalog-page__title'>
-            {catalogVariableLangRu.catalogTitle}
+            {pageTitle}
          </h4>
          <div
             className="catalog-list"
          >
             {
-               (products.length != 0) ?
-                  products.map((section) => {
-                     return <CatalogSections key={`section-${section.id}`} section={section} />
-                  })
+               (products !== null) ?
+                  (products.length != 0) ?
+                     products.map((section, index) => {
+                        return <CatalogSections
+                           key={`section-${index}`}
+                           section={section}
+                           type={type}
+                        />
+                     }) :
+                     <div>
+                        Нет товаров
+                     </div>
                   :
-                  <>loadig...</>
+                  <>loading...</>
             }
          </div>
       </div>

@@ -84,6 +84,26 @@
    transition:all 0.3s;
 }
 
+.basket-size label {
+   cursor: auto !important;
+   padding: 5px 10px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border: 1px solid var(--site-accept-color);
+   border-radius: 12px;
+   font-size: 12px;
+   font-weight: 600;
+   transition: all 0.3s;
+}
+.remove-btn {
+   cursor: pointer;
+   margin-top: 15px;
+   color: red;
+   border:1px solid red;
+   border-radius: 8px;
+   background-color: transparent;
+}
 @media (max-width:767px) {
    .product {
       flex-direction: column;

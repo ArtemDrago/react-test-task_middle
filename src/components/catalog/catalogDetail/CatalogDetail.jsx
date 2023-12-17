@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import './CatalogDetail.css';
-import { getProduct, getSizes } from '../../../services/api';
+import { getProduct } from '../../../services/api';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import changeImg from '../../../utilits/utilit';
+import appUtilit from '../../../utilits/utilit';
 import colorsProduct from "../const";
+import { addItemToBasket } from '../../../store/redusers/basketReduser';
+import { shopContext } from '../../../context/context';
+
 
 function CatalogDetail() {
-   const [sizes, setSezes] = useState([]);
+   const { sizes } = useContext(shopContext);
    const [product, setProduct] = useState(null);
    const [countImages, setCountImages] = useState(0);
    let { sectionId, id } = useParams();
-   const [activeSize, setActiveSize] = useState();
+   const [activeSize, setActiveSize] = useState(null);
    const [activeSizes, setActiveSizes] = useState();
    const navigate = useNavigate();
+   const dispach = useDispatch();
    // sectionId - id секции, в данном случае товара
    // id - цвет
 
@@ -22,15 +27,8 @@ function CatalogDetail() {
          setProduct(product);
       }
    };
-   const getSizesProduct = async () => {
-      let sizes = await getSizes();
-      if (!!sizes && sizes.length != 0) {
-         setSezes(sizes);
-      }
-   };
 
    useEffect(() => {
-      getSizesProduct();
       getProductInfo(sectionId);
    }, []);
 
@@ -38,18 +36,24 @@ function CatalogDetail() {
       if (!!id && !!product) {
          setCountImages(product.colors[id - 1].images.length);
          setActiveSizes(product.colors[id - 1].sizes);
+         setActiveSize(null);
+         removeActive();
       }
    }, [product, id]);
 
-   document.addEventListener('DOMContentLoaded', () => {
-      changeImg();
-   });
+   const removeActive = () => {
+      let labelsWrapper = document.querySelector('.size-wrapper');
+      if (!labelsWrapper) return;
 
-   if (!product) {
-      return (
-         <div className="">loading product ...</div>
-      )
+      let activeLabel = labelsWrapper.querySelector('.active');
+      if (!activeLabel) return;
+
+      activeLabel.classList.remove('active');
    }
+
+   document.addEventListener('DOMContentLoaded', () => {
+      appUtilit.changeImg();
+   });
 
    const isActiveSize = (sizeId) => {
       let isActive = true;
@@ -61,10 +65,11 @@ function CatalogDetail() {
       return isActive;
    };
 
-   const setActiveSizeFunc = (target) => {
+   const setActiveSizeFunc = (target, id) => {
       let labels = document.querySelectorAll('.size');
 
       if (labels.length == 0) return;
+      setActiveSize(id);
 
       if (target.classList.contains('size') && !target.classList.contains('disable')) {
          labels.forEach(label => {
@@ -77,6 +82,20 @@ function CatalogDetail() {
       }
    };
 
+   const addToBasketItem = () => {
+      let key = appUtilit.createKey(sectionId, id, activeSize);
+      let selectProduct = appUtilit.returnSelectProduct(product, id, activeSize);
+
+      if (!key || !selectProduct) return;
+      selectProduct.keyProduct = key;
+      dispach(addItemToBasket(selectProduct));
+   };
+
+   if (!product) {
+      return (
+         <div className="">loading product ...</div>
+      )
+   }
    return (
       <section>
          <button className="go-back" onClick={() => navigate(-1)}>
@@ -86,7 +105,7 @@ function CatalogDetail() {
             <div className="detail-product-images product-image">
                {
                   (!!product && !!product.colors &&
-                     !!product.colors[id - 1] && countImages != 0) ?
+                     product.colors != null && countImages != 0) ?
                      <>
                         {
                            product.colors[id - 1].images.map((img, index) => {
@@ -124,7 +143,7 @@ function CatalogDetail() {
                   {product.name}
                </div>
                {
-                  (!!sizes &&
+                  (
                      !!product.colors &&
                      product.colors.length != 0
                   ) ?
@@ -149,7 +168,7 @@ function CatalogDetail() {
                            </div>
                         </div>
                         {
-                           (!!activeSizes && activeSizes.length != 0) ?
+                           (!!sizes && !!activeSizes && activeSizes.length != 0) ?
                               <div className="size-block-wrapper filter-block">
                                  <div className="size-title filter-block-title">
                                     Размеры:
@@ -162,8 +181,10 @@ function CatalogDetail() {
                                                 htmlFor={`size-${size.number}`}
                                                 key={size.id}
                                                 id={size.id}
-                                                onClick={(e) => setActiveSizeFunc(e.target)}
-                                                className={(activeSizes.indexOf(size.id) != -1) ? 'size' : 'size disable'}
+                                                onClick={(e) => setActiveSizeFunc(e.target, size.id)}
+                                                className={
+                                                   (activeSizes.indexOf(size.id) != -1) ? 'size' : 'size disable'
+                                                }
                                              >
                                                 {size.label}
                                                 <input
@@ -172,7 +193,6 @@ function CatalogDetail() {
                                                    id={`size-${size.number}`}
                                                    value={size.number}
                                                    disabled={isActiveSize(size.id)}
-                                                   onChange={() => setActiveSize(size)}
                                                 />
                                              </label>
                                           )
@@ -189,14 +209,22 @@ function CatalogDetail() {
                      <></>
                }
                {
-                  (!!product.colors[id - 1].description && product.colors[id - 1].description.length != 0) ?
+                  (!!product.colors.description && product.colors.description.length != 0) ?
                      <div className="detail-product-description">
-                        {product.colors[id - 1].description}
+                        {product.colors.description}
                      </div>
                      : <></>
                }
-
-
+               <button
+                  className={(!activeSize) ? 'add-item-basket disable' : 'add-item-basket'}
+                  onClick={addToBasketItem}
+                  disabled={(!activeSize) ? true : false}
+               >
+                  Добавить в корзину
+                  <span className='is-select-size'>
+                     Выберите размер
+                  </span>
+               </button>
             </div>
          </div>
       </section>
