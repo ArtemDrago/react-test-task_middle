@@ -24,7 +24,6 @@ appUtilit.changeImg = function() {
          isDesctop = true;
       }
    });
-
 };
 
 appUtilit.catalogMouseMove = (e) => {

@@ -23,8 +23,9 @@ export const basketReduser = createSlice({
             }
             if (!newProduct) {
                state.basketItems.push(res);
+               alert(`Товар успешно добавлен в корзину`);
             } else {
-               console.log(`Товар с id ${key} уже в корзине`)
+               alert(`Товар с id ${key} уже в корзине`);
             }
 
          } catch (er) {

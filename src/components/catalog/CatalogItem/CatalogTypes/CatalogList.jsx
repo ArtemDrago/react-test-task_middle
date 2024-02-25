@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 function CatalogList({ el, section }) {
    return (
       <Link
-         to={`/catalog/${section.id}/${el.id}`}
+         to={`/${section.id}/${el.id}`}
          className="product"
          key={el.id}
       >

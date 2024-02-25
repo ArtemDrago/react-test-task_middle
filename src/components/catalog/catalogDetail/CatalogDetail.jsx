@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import './CatalogDetail.css';
 import { getProduct } from '../../../services/api';
@@ -18,15 +18,13 @@ function CatalogDetail() {
    const [activeSizes, setActiveSizes] = useState();
    const navigate = useNavigate();
    const dispach = useDispatch();
-   // sectionId - id секции, в данном случае товара
-   // id - цвет
 
-   const getProductInfo = async (id) => {
+   const getProductInfo = useCallback(async (id) => {
       let product = await getProduct(id);
       if (!!product && product.length != 0) {
          setProduct(product);
       }
-   };
+   });
 
    useEffect(() => {
       getProductInfo(sectionId);
@@ -41,7 +39,7 @@ function CatalogDetail() {
       }
    }, [product, id]);
 
-   const removeActive = () => {
+   const removeActive = useCallback(() => {
       let labelsWrapper = document.querySelector('.size-wrapper');
       if (!labelsWrapper) return;
 
@@ -49,13 +47,13 @@ function CatalogDetail() {
       if (!activeLabel) return;
 
       activeLabel.classList.remove('active');
-   }
+   });
 
    document.addEventListener('DOMContentLoaded', () => {
       appUtilit.changeImg();
    });
 
-   const isActiveSize = (sizeId) => {
+   const isActiveSize = useCallback((sizeId) => {
       let isActive = true;
       if (!sizeId) return;
 
@@ -63,9 +61,9 @@ function CatalogDetail() {
          isActive = false;
       }
       return isActive;
-   };
+   });
 
-   const setActiveSizeFunc = (target, id) => {
+   const setActiveSizeFunc = useCallback((target, id) => {
       let labels = document.querySelectorAll('.size');
 
       if (labels.length == 0) return;
@@ -80,16 +78,16 @@ function CatalogDetail() {
             }
          });
       }
-   };
+   });
 
-   const addToBasketItem = () => {
+   const addToBasketItem = useCallback(() => {
       let key = appUtilit.createKey(sectionId, id, activeSize);
       let selectProduct = appUtilit.returnSelectProduct(product, id, activeSize);
 
       if (!key || !selectProduct) return;
       selectProduct.keyProduct = key;
       dispach(addItemToBasket(selectProduct));
-   };
+   }, [product, sectionId, id, activeSize]);
 
    if (!product) {
       return (
@@ -158,7 +156,7 @@ function CatalogDetail() {
                                     return (
                                        <Link
                                           key={`${color.id}`}
-                                          to={`/catalog/${sectionId}/${color.id}`}
+                                          to={`/${sectionId}/${color.id}`}
                                           className={(color.id == id) ? 'color-block active ' + colorsProduct[`${color.name}`] : 'color-block ' + colorsProduct[`${color.name}`]}
                                        >
                                        </Link>
